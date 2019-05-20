@@ -1,24 +1,52 @@
-import View from './view';
+import View from "./view";
 
 class FighterView extends View {
-  constructor(fighter, handleClick) {
+  constructor(fighter, handleDetailsClick, handleSelectClick) {
     super();
 
-    this.createFighter(fighter, handleClick);
+    this.createFighter(fighter, handleDetailsClick, handleSelectClick);
   }
 
-  createFighter(fighter, handleClick) {
+  createFighter(fighter, handleDetalisClick, handleSelectClick) {
     const { name, source } = fighter;
     const nameElement = this.createName(name);
     const imageElement = this.createImage(source);
 
-    this.element = this.createElement({ tagName: 'div', className: 'fighter' });
-    this.element.append(imageElement, nameElement);
-    this.element.addEventListener('click', event => handleClick(event, fighter), false);
+    this.element = this.createElement({
+      tagName: "div",
+      classNames: ["fighter"]
+    });
+
+    const fighterMain = this.createElement({
+      tagName: "div",
+      classNames: ["fighter-body"]
+    });
+
+    const selectBtn = this.createElement({
+      tagName: "button",
+      classNames: ["btn", "btn-primary"]
+    });
+    selectBtn.innerText = "SELECT";
+
+    selectBtn.addEventListener(
+      "click",
+      event => handleSelectClick(event, fighter),
+      false
+    );
+    fighterMain.append(imageElement, nameElement, selectBtn);
+    this.element.append(fighterMain, selectBtn);
+    fighterMain.addEventListener(
+      "click",
+      event => handleDetalisClick(event, fighter),
+      false
+    );
   }
 
   createName(name) {
-    const nameElement = this.createElement({ tagName: 'span', className: 'name' });
+    const nameElement = this.createElement({
+      tagName: "span",
+      classNames: ["name"]
+    });
     nameElement.innerText = name;
 
     return nameElement;
@@ -27,8 +55,8 @@ class FighterView extends View {
   createImage(source) {
     const attributes = { src: source };
     const imgElement = this.createElement({
-      tagName: 'img',
-      className: 'fighter-image',
+      tagName: "img",
+      classNames: ["fighter-image"],
       attributes
     });
 
