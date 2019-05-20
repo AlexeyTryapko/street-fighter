@@ -30,9 +30,20 @@ body {
     padding: 20px;
 }
 
+.selected-fighter {
+    background-color: rgba(219, 28, 28, 0.733);
+    box-shadow: inset 4px 4px 23px -1px rgba(0, 0, 0, 0.7);
+}
+
 .fighter:hover {
     box-shadow: 0 0 50px 10px rgba(0,0,0,0.06);
     cursor: pointer;
+}
+
+.fighter-body {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10px;
 }
 
 .name {
