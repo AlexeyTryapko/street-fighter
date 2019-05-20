@@ -7,6 +7,39 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div class="header-user-controls">
+      <button type="button" class="btn btn-danger btn-lg" id="start-fight">FIGHT</button>
+    </div>
+    <div class="modal-info modal fade show" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title name"></h5>
+          </div>
+          <form>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="health-info">Health</label>
+                <input type="text" class="input-info form-control" id="health-info">
+              </div>
+              <div class="form-group">
+                <label for="attack-info">Attack</label>
+                <input type="text" class="input-info form-control" id="attack-info">
+              </div>
+              <div class="form-group">
+                <label for="defense-info">Defense</label>
+                <input type="text" class="input-info form-control" id="defense-info">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="close-modal" type="button" class="btn btn-secondary">Close</button>
+              <button id="save-modal" class="btn btn-primary" type="button">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div id="root">
     </div>
     <div id="loading-overlay">
