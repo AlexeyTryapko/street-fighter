@@ -1,15 +1,18 @@
 import View from "./view";
 import FighterView from "./fighterView";
 import { fighterService } from "./services/fightersService";
-import { fight } from './fight';
-import Fighter from './Fighter';
+import { fight } from "./fight";
+import Fighter from "./Fighter";
 
 class FightersView extends View {
   constructor(fighters) {
     super();
-    this.handleClick = this.handleFighterClick.bind(this);
+    this.handleDetailsClick = this.handleFighterClick.bind(this);
+    this.handleSelectClick = this.handleFighterSelectClick.bind(this);
     this.createFighters(fighters);
-    this.startFightBtn.addEventListener("click", () => this.startFight());
+    this.startFightBtn.addEventListener("click", () =>
+      this.startFight(this.fighters)
+    );
   }
 
   fightersDetailsMap = new Map();
@@ -19,41 +22,65 @@ class FightersView extends View {
   attackInfo = document.getElementById("attack-info");
   defenseInfo = document.getElementById("defense-info");
   startFightBtn = document.getElementById("start-fight");
+  fighters = [];
 
-  startFight() {
-    const firstFighter = this.fightersDetailsMap.get("1");
-    const secondFighter = this.fightersDetailsMap.get("6");
-    fight(
-      new Fighter(firstFighter),
-      new Fighter(secondFighter)
-    );
+  async startFight([{ id: firstFighterID }, { id: secondFighterID }]) {
+    const firstFighter = await this.getFighterDetails(firstFighterID);
+    const secondFighter = await this.getFighterDetails(secondFighterID);
+    fight(new Fighter(firstFighter), new Fighter(secondFighter));
   }
 
   createFighters(fighters) {
     const fighterElements = fighters.map(fighter => {
-      const fighterView = new FighterView(fighter, this.handleClick);
+      const fighterView = new FighterView(
+        fighter,
+        this.handleDetailsClick,
+        this.handleSelectClick
+      );
       return fighterView.element;
     });
 
     this.element = this.createElement({
       tagName: "div",
-      className: "fighters"
+      classNames: ["fighters"]
     });
     this.element.append(...fighterElements);
   }
 
-  async handleFighterClick(event, { _id: fighterID }) {
-    let fighterDetails = this.fightersDetailsMap.get(fighterID);
-
-    if (!fighterDetails) {
-      fighterDetails = await fighterService.getFighterDetails(fighterID);
-      this.fightersDetailsMap.set(fighterID, fighterDetails);
+  async handleFighterSelectClick(event, fighter) {
+    const fighterDetails = await this.getFighterDetails(fighter._id);
+    const target = event.target.parentNode;
+    if (this.fighters.length === 2) {
+      this.fighters.shift().target.classList.remove("selected-fighter");
+      this.fighters.push({ id: fighterDetails._id, target });
+      target.classList.add("selected-fighter");
+    } else {
+      this.fighters.push({ id: fighterDetails._id, target });
+      target.classList.add("selected-fighter");
     }
+  }
 
+  styleSelectedFighters(newTarget, fightersTargets) {
+    event.target.parentNode.classList.add("selected-fighter");
+  }
+
+  async handleFighterClick(event, { _id: fighterID }) {
+    const fighterDetails = await this.getFighterDetails(fighterID);
     this.initModal(fighterDetails);
   }
 
-  updateFighterInfo(fighter) {
+  async getFighterDetails(id) {
+    let fighterDetails = this.fightersDetailsMap.get(id);
+
+    if (!fighterDetails) {
+      fighterDetails = await fighterService.getFighterDetails(id);
+      this.fightersDetailsMap.set(id, fighterDetails);
+    }
+
+    return fighterDetails;
+  }
+
+  updateFighterDetails(fighter) {
     const updatedFighter = Object.assign(fighter, {
       health: this.healthInfo.value,
       attack: this.attackInfo.value,
@@ -76,7 +103,7 @@ class FightersView extends View {
 
     newSaveBtn.addEventListener(
       "click",
-      () => (this.updateFighterInfo(fighter), this.closeModal())
+      () => (this.updateFighterDetails(fighter), this.closeModal())
     );
   }
 
