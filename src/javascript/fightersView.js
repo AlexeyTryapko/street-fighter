@@ -11,7 +11,7 @@ class FightersView extends View {
     this.handleSelectClick = this.handleFighterSelectClick.bind(this);
     this.createFighters(fighters);
     this.startFightBtn.addEventListener("click", () =>
-      this.startFight(this.fighters)
+      this.startFightClick(this.fighters)
     );
   }
 
@@ -23,11 +23,23 @@ class FightersView extends View {
   defenseInfo = document.getElementById("defense-info");
   startFightBtn = document.getElementById("start-fight");
   fighters = [];
+  selectedColor = "blue";
+
+  startFightClick(fighters) {
+    fighters.length < 2
+      ? this.startFightBtn.nextElementSibling.classList.remove(
+          "visually-hidden"
+        )
+      : this.startFight(fighters);
+  }
 
   async startFight([{ id: firstFighterID }, { id: secondFighterID }]) {
-    const firstFighter = await this.getFighterDetails(firstFighterID);
     const secondFighter = await this.getFighterDetails(secondFighterID);
+    const firstFighter = await this.getFighterDetails(firstFighterID);
+
     fight(new Fighter(firstFighter), new Fighter(secondFighter));
+
+    this.startFightBtn.nextElementSibling.classList.add("visually-hidden");
   }
 
   createFighters(fighters) {
@@ -47,21 +59,23 @@ class FightersView extends View {
     this.element.append(...fighterElements);
   }
 
-  async handleFighterSelectClick(event, fighter) {
-    const fighterDetails = await this.getFighterDetails(fighter._id);
-    const target = event.target.parentNode;
+  async handleFighterSelectClick(event, { _id: fighterID }) {
+    await this.getFighterDetails(fighterID);
     if (this.fighters.length === 2) {
-      this.fighters.shift().target.classList.remove("selected-fighter");
-      this.fighters.push({ id: fighterDetails._id, target });
-      target.classList.add("selected-fighter");
-    } else {
-      this.fighters.push({ id: fighterDetails._id, target });
-      target.classList.add("selected-fighter");
+      this.fighters
+        .shift()
+        .target.classList.remove("selected-fighter", "red", "blue");
     }
+    const target = event.target.parentNode;
+    target.classList.add("selected-fighter");
+    this.fighters.push({ id: fighterID, target });
+    this.changeSelectedColor(this.fighters);
   }
 
-  styleSelectedFighters(newTarget, fightersTargets) {
-    event.target.parentNode.classList.add("selected-fighter");
+  changeSelectedColor(fighters) {
+    if (fighters[1]) fighters[1].target.classList.add("red");
+    fighters[0].target.classList.add("blue");
+    fighters[0].target.classList.remove("red");
   }
 
   async handleFighterClick(event, { _id: fighterID }) {
@@ -76,7 +90,6 @@ class FightersView extends View {
       fighterDetails = await fighterService.getFighterDetails(id);
       this.fightersDetailsMap.set(id, fighterDetails);
     }
-
     return fighterDetails;
   }
 
@@ -97,7 +110,6 @@ class FightersView extends View {
     closeBtn.addEventListener("click", () => this.closeModal());
 
     const saveBtn = document.getElementById("save-modal");
-    //For removing extra eventListeners
     const newSaveBtn = saveBtn.cloneNode(true);
     saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
 
