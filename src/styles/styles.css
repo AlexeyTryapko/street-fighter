@@ -6,12 +6,21 @@ body {
     padding: 0;
 }
 
+.visually-hidden {
+    display: none;
+    position: absolute;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+}
+
 #root {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 90%;
+    height: 70%;
     width: 100%;
 }
 
@@ -31,12 +40,19 @@ body {
 }
 
 .selected-fighter {
-    background-color: rgba(219, 28, 28, 0.733);
     box-shadow: inset 4px 4px 23px -1px rgba(0, 0, 0, 0.7);
 }
 
+.selected-fighter.blue {
+    background-color: rgba(0, 123, 255, 0.7);
+}
+
+.selected-fighter.red {
+    background-color: rgba(220, 53, 69, 0.7);
+}
+
 .fighter:hover {
-    box-shadow: 0 0 50px 10px rgba(0,0,0,0.06);
+    box-shadow: 0 0 50px 10px rgba(0, 0, 0, 0.06);
     cursor: pointer;
 }
 
@@ -79,6 +95,106 @@ body {
 .header-user-controls {
     display: flex;
     justify-content: center;
+    align-items: center;
     height: 10%;
-    
+    flex-direction: column;
+}
+
+#game {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+#game .user-controls {
+    display: flex;
+    justify-content: center;
+}
+
+.game-main {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.fighter-side {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    width: 40%;
+}
+
+.fighter-header {
+    margin-bottom: 18%;
+}
+
+.health-progress-bar {
+    height: 4vh;
+    font-size: 1.5rem;
+}
+
+.fighter-body-game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fighter-body-game .fighter-image {
+    height: 350px;
+}
+
+.fighter-image-right {
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
+
+/* Styles for hit animation */
+.hit-left {
+    animation: leftHit .7s linear;
+    margin-right: 0;
+}
+
+@keyframes leftHit {
+    0% {
+        margin-left: 0;
+    }
+
+    50% {
+        margin-left: 140%;
+    }
+
+    100% {
+        margin-left: 0;
+    }
+}
+
+.hit-right {
+    animation: rightHit .7s linear;
+    margin-right: 0;
+}
+
+@keyframes rightHit {
+    0% {
+        margin-right: 0;
+    }
+
+    50% {
+        margin-right: 140%;
+    }
+
+    100% {
+        margin-right: 0;
+    }
+}
+
+.winner {
+    display: flex;
+    justify-content: center;
 }
