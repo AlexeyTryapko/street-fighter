@@ -12,6 +12,11 @@ pipelines:
     - step:
         caches:
           - node
-        script: # Modify the commands below to build your repository.
-          - npm install
-          - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD
+        deployment: production
+        script:
+        - pipe: atlassian/heroku-deploy:1.0.0
+          variables:
+            HEROKU_API_KEY: $HEROKU_API_KEY
+            HEROKU_APP_NAME: $HEROKU_APP_NAME
+            WAIT: 'true'
+
