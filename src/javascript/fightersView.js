@@ -14,7 +14,7 @@ class FightersView extends View {
       this.startFightClick(this.fighters)
     );
   }
-
+  static rootElement = document.getElementById("root");
   fightersDetailsMap = new Map();
   modal = document.querySelector(".modal-info");
   modalTitle = document.querySelector(".modal-title");
@@ -51,7 +51,6 @@ class FightersView extends View {
       );
       return fighterView.element;
     });
-
     this.element = this.createElement({
       tagName: "div",
       classNames: ["fighters"]
@@ -93,13 +92,23 @@ class FightersView extends View {
     return fighterDetails;
   }
 
-  updateFighterDetails(fighter) {
+  async updateFighterDetails(fighter) {
     const updatedFighter = Object.assign(fighter, {
       health: this.healthInfo.value,
       attack: this.attackInfo.value,
       defense: this.defenseInfo.value
     });
-    this.fightersDetailsMap.set(fighter._id, updatedFighter);
+    const res = await fighterService.updateFighterInfo(updatedFighter);
+    this.fightersDetailsMap.set(res._id, res);
+  }
+
+  async removeFighter(fighter) {
+    const res = await fighterService.deleteFighter(fighter._id);
+    if (res === `User was deleted - true`) {
+      this.fightersDetailsMap.delete(fighter._id);
+      return true;
+    }
+    return false;
   }
 
   initModal(fighter) {
@@ -112,6 +121,26 @@ class FightersView extends View {
     const saveBtn = document.getElementById("save-modal");
     const newSaveBtn = saveBtn.cloneNode(true);
     saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+
+    const deleteBtn = document.getElementById("delete-modal");
+    const newDeleteBtn = deleteBtn.cloneNode(true);
+    deleteBtn.parentNode.replaceChild(newDeleteBtn, deleteBtn);
+
+    newDeleteBtn.addEventListener("click", async () => {
+      const res = this.removeFighter(fighter);
+      if (res) {
+        while (this.element.firstChild) {
+          this.element.removeChild(this.element.firstChild);
+        }
+        this.element = undefined;
+        const fighters = await fighterService.getFighters();
+        this.createFighters(fighters);
+
+        FightersView.rootElement.removeChild(FightersView.rootElement.lastChild);
+        FightersView.rootElement.appendChild(this.element);
+        this.closeModal();
+      }
+    });
 
     newSaveBtn.addEventListener(
       "click",

@@ -6,7 +6,7 @@ class FighterService {
       const endpoint = 'user';
       const apiResult = await callApi(endpoint, 'GET');
 
-      return JSON.parse(atob(apiResult.content));
+      return apiResult;
     } catch (error) {
       throw error;
     }
@@ -16,7 +16,27 @@ class FighterService {
     try {
       const endpoint = `user/${_id}`;
       const apiResult = await callApi(endpoint, 'GET');
-      return JSON.parse(atob(apiResult.content));
+      return apiResult;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateFighterInfo(data) {
+    try {
+      const endpoint = `user/${data._id}`;
+      const apiResult = await callApi(endpoint, "PUT", data);
+      return apiResult;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteFighter(_id) {
+    try {
+      const endpoint = `user/${_id}`;
+      const apiResult = await callApi(endpoint, "DELETE");
+      return apiResult;
     } catch (error) {
       throw error;
     }
