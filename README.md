@@ -4,6 +4,6 @@
 
 `npm install`
 
-`npm run dev`
+`npm run start`
 
 open http://localhost:8080/
