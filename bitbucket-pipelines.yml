@@ -13,7 +13,6 @@ pipelines:
           - node
         script:
           - npm install
-          - npm run build
     - step:
         name: Deploy to Heroku
         deployment: staging   # set to test, staging or production
