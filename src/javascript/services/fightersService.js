@@ -3,7 +3,7 @@ import { callApi } from '../helpers/apiHelper';
 class FighterService {
   async getFighters() {
     try {
-      const endpoint = 'fighters.json';
+      const endpoint = 'user';
       const apiResult = await callApi(endpoint, 'GET');
 
       return JSON.parse(atob(apiResult.content));
@@ -14,7 +14,7 @@ class FighterService {
 
   async getFighterDetails(_id) {
     try {
-      const endpoint = `details/fighter/${_id}.json`;
+      const endpoint = `user/${_id}`;
       const apiResult = await callApi(endpoint, 'GET');
       return JSON.parse(atob(apiResult.content));
     } catch (error) {
