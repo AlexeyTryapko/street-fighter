@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/";
+const API_URL = "https://street-fighter-srvr.herokuapp.com/";
 
 function callApi(endpoind, method, data) {
   const url = API_URL + endpoind;

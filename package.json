@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack-dev-server",
-    "start": "./node_modules/webpack/bin/webpack.js -p --progress && node server.js",
+    "start": "npm run build && node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +23,7 @@
     "webpack-dev-server": "^3.3.1"
   },
   "dependencies": {
-    "bootstrap": "^4.3.1"
+    "bootstrap": "^4.3.1",
+    "express": "^4.17.0"
   }
 }
